@@ -1,0 +1,44 @@
+<mat-tab-group [dynamicHeight]="true">
+  <mat-tab label="Auswertung">
+    Test
+  </mat-tab>
+  <mat-tab label="Vorschläge">
+
+    <mat-list>
+      <mat-list-item *ngFor="let suggestion of suggestions.controls">
+
+        <app-goal-form-control
+          [appFormControl]="suggestion"
+          [submit]="updateHandler"
+          >
+        </app-goal-form-control>
+        <button
+          mat-icon-button
+          color="warn"
+          [disabled]="suggestions.dirty"
+          (click)="delete(suggestion)"
+          >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+
+      </mat-list-item>
+    </mat-list>
+
+    <form (submit)="add(newSuggestion)" id="new-suggestion">
+      <app-goal-form-control
+        [appFormControl]="newSuggestion"
+        placeholder="Neuer Vorschlag"
+        >
+      </app-goal-form-control>
+      <button
+        mat-icon-button
+        type="button"
+        [disabled]="suggestions.dirty"
+        (click)="reset(newSuggestion)"
+        >
+        <mat-icon>close</mat-icon>
+      </button>
+    </form>
+
+  </mat-tab>
+</mat-tab-group>

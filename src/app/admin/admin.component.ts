@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {GoalComponent} from 'src/app/admin/goal/goal.component';
-import {OrientationComponent} from 'src/app/admin/orientation/orientation.component';
-import {FeedbackComponent} from 'src/app/admin/feedback/feedback.component';
+import { Component, OnInit, ComponentFactoryResolver, OnDestroy, Type } from '@angular/core';
+import {AdminGoalsComponent} from 'src/app/admin-goals/admin-goals.component';
+import {AdminOrientationComponent} from 'src/app/admin-orientation/admin-orientation.component';
+import {AdminFeedbackComponent} from 'src/app/admin-feedback/admin-feedback.component';
 
 interface Section {
   title: string
-  component: any // TODO change
+  component: Type<unknown>
 }
 
 @Component({
@@ -13,17 +13,21 @@ interface Section {
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
 
   constructor() { }
 
   sections: Section[] = [
-    { title: 'Ziele', component: GoalComponent },
-    { title: 'Orientierung', component: OrientationComponent },
-    { title: 'Feedback', component: FeedbackComponent },
+    { title: 'Ziele',        component: AdminGoalsComponent },
+    { title: 'Orientierung', component: AdminOrientationComponent },
+    { title: 'Feedback',     component: AdminFeedbackComponent },
   ]
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+
   }
 
 }

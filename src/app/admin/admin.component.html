@@ -6,7 +6,8 @@
       <mat-panel-description></mat-panel-description>
     </mat-expansion-panel-header>
 
-    Content
+    <app-dynamic-component [component]="section.component">
+    </app-dynamic-component>
 
   </mat-expansion-panel>
 </mat-accordion>

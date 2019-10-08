@@ -1,0 +1,14 @@
+<mat-form-field>
+  <input
+    matInput
+    [formControl]="appFormControl"
+    [placeholder]="placeholder ? placeholder : null"
+    (change)="change()"
+    >
+  <mat-error *ngIf="hasError('required')">
+    Das Feld muss ausgefühllt sein
+  </mat-error>
+  <mat-error *ngIf="hasError('minlength')">
+    Das Feld muss mindestens 4 Zeichen haben
+  </mat-error>
+</mat-form-field>
