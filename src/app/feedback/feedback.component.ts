@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {MatSnackBar} from '@angular/material';
+import {SessionService} from 'src/app/session.service';
 
 @Component({
   selector: 'app-feedback',
@@ -7,7 +10,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FeedbackComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private readonly db: AngularFirestore,
+    private readonly session: SessionService,
+    private readonly snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit() {
   }

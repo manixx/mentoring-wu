@@ -19,7 +19,8 @@ import {
   MatCardModule,
   MatToolbarModule,
   MatButtonToggleModule,
-  MatDividerModule
+  MatDividerModule,
+  MatAutocompleteModule
 } from '@angular/material'
 
 import firebaseConfig from '../environments/firebase';
@@ -72,6 +73,7 @@ import { GoalComponent } from './goal/goal.component';
     MatToolbarModule,
     MatButtonToggleModule,
     MatDividerModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

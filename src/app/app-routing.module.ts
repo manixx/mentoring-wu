@@ -6,9 +6,14 @@ import {GoalComponent} from 'src/app/goal/goal.component';
 
 
 const routes: Routes = [
-  { path: 'admin', component: AdminComponent },
-  { path: 'goals', component: GoalComponent },
-  { path: '', component: WelcomeComponent }
+  {
+    path: ':mentor',
+    children: [
+      { path: 'admin', component: AdminComponent },
+      { path: 'ziele', component: GoalComponent },
+      { path: '', component: WelcomeComponent }
+    ],
+  },
 ];
 
 @NgModule({

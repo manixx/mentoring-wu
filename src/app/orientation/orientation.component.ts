@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {SessionService} from 'src/app/session.service';
 
 @Component({
   selector: 'app-orientation',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OrientationComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private readonly db: AngularFirestore,
+    private readonly session: SessionService,
+  ) { }
 
   ngOnInit() {
   }
 
+  changeAnswer() {
+
+  }
 }

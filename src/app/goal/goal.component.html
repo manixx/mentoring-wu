@@ -22,3 +22,24 @@
     <mat-divider></mat-divider>
 
 </mat-list>
+
+<form (submit)="add()">
+  <mat-form-field hintLabel="Ab 4 Zeichen bekommst du Vorschläge!">
+
+    <input matInput placeholder="Gib Dein Ziel ein" [matAutocomplete]="auto">
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option>
+        Test
+      </mat-option>
+    </mat-autocomplete>
+
+    <mat-error>
+      Dieses Feld darf nicht leer sein
+    </mat-error>
+    <mat-error>
+      Du musst mindestens 4 Zeichen eingeben
+    </mat-error>
+
+  </mat-form-field>
+</form>
