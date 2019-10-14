@@ -1,14 +1,34 @@
 <mat-accordion>
-  <mat-expansion-panel *ngFor="let section of sections">
-
+  <mat-expansion-panel *ngFor="let panel of panels">
     <mat-expansion-panel-header>
-      <mat-panel-title>{{ section.title }}</mat-panel-title>
-      <mat-panel-description></mat-panel-description>
+
+      <mat-panel-title>
+        {{ panel.name }}
+      </mat-panel-title>
+      <mat-panel-description>
+        <mat-chip-list>
+          <mat-chip
+            selected
+            color="primary"
+            *ngIf="isSectionOpen(panel)"
+          >
+            Bereich geöffnet
+          </mat-chip>
+        </mat-chip-list>
+      </mat-panel-description>
+
     </mat-expansion-panel-header>
 
-    <app-dynamic-component [component]="section.component">
+    <app-dynamic-component [component]="panel.component">
     </app-dynamic-component>
 
+    <mat-action-row>
+      <mat-slide-toggle
+        [checked]="isSectionOpen(panel)"
+        (change)="toggleSection(panel, $event)"
+      >
+        Bereich öffnen
+      </mat-slide-toggle>
+    </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-

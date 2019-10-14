@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {Setting} from 'src/app/settings';
+import {Setting, settingsDocument} from 'src/app/setting';
 import {map, filter} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
@@ -17,7 +17,7 @@ export class WelcomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.db.doc<Setting>('admin/settings')
+    this.db.doc<Setting>(settingsDocument)
       .valueChanges()
       .pipe(
         filter(s => !!s.openSection),

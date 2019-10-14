@@ -1,0 +1,30 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Umfagen">
+
+
+  </mat-tab>
+  <mat-tab label="Fragen">
+
+    <mat-list>
+      <mat-list-item *ngFor="let question of questions.controls">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Frage"
+            [formControl]="question"
+            (change)="update(question)"
+          >
+        </mat-form-field>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="delete(question)"
+          *ngIf="question !== newQuestion"
+        >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,70 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Auswertung">
+
+
+  </mat-tab>
+  <mat-tab label="Fragen">
+
+    <mat-card *ngFor="let question of questions.controls">
+      <form (submit)="update(question)" [formGroup]="question">
+
+          <mat-form-field class="question">
+            <input
+              matInput
+              formControlName="question"
+              placeholder="Frage"
+              >
+          </mat-form-field>
+
+            <mat-form-field class="min-required">
+              <input
+                matInput
+                formControlName="minRequired"
+                type="number"
+                placeholder="Müssen mid. angehakelt werden"
+                >
+            </mat-form-field>
+
+        <mat-list>
+          <mat-list-item *ngFor="let option of getOptions(question).controls">
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="Option"
+                [formControl]="option"
+              >
+            </mat-form-field>
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="deleteOption(question, option)"
+              *ngIf="option !== getNewOption(question)"
+            >
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+
+        <button
+            mat-button
+            color="primary"
+            type="submit"
+        >
+          Speichern
+        </button>
+        <button
+          mat-button
+          color="warn"
+          type="button"
+          (click)="delete(question)"
+          *ngIf="question !== newQuestion"
+        >
+          Frage löschen
+        </button>
+
+      </form>
+    </mat-card>
+
+  </mat-tab>
+</mat-tab-group>

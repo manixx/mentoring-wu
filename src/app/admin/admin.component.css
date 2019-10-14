@@ -1,0 +1,7 @@
+mat-panel-title {
+  align-items: center;
+}
+
+mat-panel-description {
+  flex-grow: 0;
+}

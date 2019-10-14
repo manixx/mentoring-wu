@@ -1,0 +1,32 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Wordcloud">
+
+
+  </mat-tab>
+  <mat-tab label="Vorschläge">
+
+    <mat-list>
+      <mat-list-item
+        *ngFor="let suggestion of suggestions.controls"
+        >
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="Vorschlag"
+            [formControl]="suggestion"
+            (change)="update(suggestion)"
+          >
+        </mat-form-field>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="delete(suggestion)"
+          *ngIf="suggestion !== newSuggestion"
+        >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-tab>
+</mat-tab-group>

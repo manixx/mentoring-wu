@@ -1,1 +1,19 @@
-<p>orientation works!</p>
+<mat-card
+  *ngFor="let question of questions | async"
+>
+  <mat-card-title>{{ question.question }}</mat-card-title>
+
+  <mat-divider></mat-divider>
+
+    <mat-checkbox
+      *ngFor="let option of question.options"
+      (change)="changeAnswer(question, option)"
+    >
+      {{ option }}
+    </mat-checkbox>
+
+</mat-card>
+
+<button mat-raised-button color="primary">
+  Ich bin fertig!
+</button>

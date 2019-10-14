@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminOrientationComponent } from './admin-orientation.component';
+import { OrientationComponent } from './orientation.component';
 
-describe('AdminOrientationComponent', () => {
-  let component: AdminOrientationComponent;
-  let fixture: ComponentFixture<AdminOrientationComponent>;
+describe('OrientationComponent', () => {
+  let component: OrientationComponent;
+  let fixture: ComponentFixture<OrientationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminOrientationComponent ]
+      declarations: [ OrientationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdminOrientationComponent);
+    fixture = TestBed.createComponent(OrientationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

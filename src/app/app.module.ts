@@ -20,36 +20,41 @@ import {
   MatToolbarModule,
   MatButtonToggleModule,
   MatDividerModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatSlideToggleModule,
+  MatChipsModule
 } from '@angular/material'
 
 import firebaseConfig from '../environments/firebase';
-import { AdminComponent } from './admin/admin.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { OrientationComponent } from './orientation/orientation.component';
-import { AdminGoalsComponent } from './admin-goals/admin-goals.component';
-import { AdminFeedbackComponent } from './admin-feedback/admin-feedback.component';
-import { DynamicComponentComponent } from './util/dynamic-component/dynamic-component.component';
+import { DynamicComponentComponent } from './admin/dynamic-component/dynamic-component.component';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { GoalFormControlComponent } from './form-controls/goal-form-control/goal-form-control.component';
 import { AdminOrientationQuestionComponent } from './form-controls/admin-orientation-question/admin-orientation-question.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { GoalComponent } from './goal/goal.component';
+import { AdminComponent } from './admin/admin.component';
+import { GoalComponent as AdminGoalComponent } from './admin/goal/goal.component'
+import { OrientationComponent as AdminOrientationComponent } from './admin/orientation/orientation.component'
+import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/feedback.component'
+import {AngularFireAuthModule} from '@angular/fire/auth';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AdminComponent,
     FeedbackComponent,
     OrientationComponent,
-    AdminGoalsComponent,
-    AdminFeedbackComponent,
     DynamicComponentComponent,
     GoalFormControlComponent,
     AdminOrientationQuestionComponent,
     WelcomeComponent,
     GoalComponent,
+    AdminComponent,
+    AdminGoalComponent,
+    AdminOrientationComponent,
+    AdminFeedbackComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +64,7 @@ import { GoalComponent } from './goal/goal.component';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
+    AngularFireAuthModule,
     MatButtonModule,
     MatExpansionModule,
     MatTabsModule,
@@ -74,11 +80,14 @@ import { GoalComponent } from './goal/goal.component';
     MatButtonToggleModule,
     MatDividerModule,
     MatAutocompleteModule,
+    MatSlideToggleModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    AdminGoalsComponent,
+    AdminGoalComponent,
+    AdminOrientationComponent,
     AdminFeedbackComponent,
   ]
 })

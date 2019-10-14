@@ -3,7 +3,9 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {SessionService} from 'src/app/session.service';
 import {Goal, goalCollection} from 'src/app/goal/goal';
 import {MatSnackBar} from '@angular/material';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators, FormControl} from '@angular/forms';
+import {Setting, settingsDocument} from 'src/app/setting';
+import {map, filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-goal',
@@ -19,19 +21,42 @@ export class GoalComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
   ) { }
 
-  goals: Goal[]
-  newGoal = this.formBuilder.control(null, [
+  goals = this.db.collection<Goal>(
+      goalCollection,
+      ref => ref.where('session', '==', this.session.key)
+    )
+      .valueChanges({ idField: 'id' })
+
+  settings = this.db.doc<Setting>(settingsDocument)
+
+  newGoal = this.formBuilder.control('', [
     Validators.required,
     Validators.minLength(4),
   ])
 
-  ngOnInit() {
-    this.db.collection<Goal>(
-      goalCollection,
-      ref => ref.where('session', '==', this.session.key)
+  suggestions: string[] = []
+
+  goalSuggestions = this.newGoal
+    .valueChanges
+    .pipe(
+      filter(v => typeof v === 'string'),
+      filter(v => v.length > this.charsUntilAutocompletion),
+      map(v => {
+        return this.suggestions.filter(s => {
+          return s.toLowerCase().includes(v.toLowerCase())
+        })
+      })
     )
+
+  charsUntilAutocompletion = 4
+
+  ngOnInit() {
+    this.settings
       .valueChanges()
-      .subscribe(g => this.goals = g)
+      .pipe(
+        map(s => s.goalSuggestions)
+      )
+      .subscribe(suggestions => this.suggestions = suggestions)
   }
 
   add() {
@@ -43,14 +68,22 @@ export class GoalComponent implements OnInit {
       goal: this.newGoal.value,
       important: false
     })
+    this.newGoal.reset()
   }
 
   delete(goal: Goal) {
+    console.log(goal)
     this.db.doc(`${goalCollection}/${goal.id}`).delete()
+    this.snackBar.open("Ziel gelöscht")
   }
 
-  setFavourite() {
 
+  hasError(formControl: FormControl, errorCode: string) {
+    return formControl.hasError(errorCode)
+  }
+
+  setFavourite(goal: Goal) {
+    console.log(goal)
   }
 
 }
