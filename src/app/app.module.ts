@@ -40,6 +40,7 @@ import { GoalComponent as AdminGoalComponent } from './admin/goal/goal.component
 import { OrientationComponent as AdminOrientationComponent } from './admin/orientation/orientation.component'
 import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/feedback.component'
 import {AngularFireAuthModule} from '@angular/fire/auth';
+import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import {AngularFireAuthModule} from '@angular/fire/auth';
     AdminGoalComponent,
     AdminOrientationComponent,
     AdminFeedbackComponent,
+    WordcloudComponent,
   ],
   imports: [
     BrowserModule,
