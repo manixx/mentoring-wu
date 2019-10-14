@@ -1,4 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, ViewChildren, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, ViewChildren, ChangeDetectorRef, Input } from '@angular/core';
+import {Observable} from 'rxjs';
+import {Goal, goalCollection} from 'src/app/goal/goal';
+import {map, filter} from 'rxjs/operators';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 interface Box {
   x: number
@@ -8,6 +12,8 @@ interface Box {
   word: string
   rotated: boolean
   relevance: number
+  fontSize: number
+  fill: string
 }
 
 interface ViewBox {
@@ -24,6 +30,11 @@ enum Side {
   Right,
 }
 
+interface Pivot {
+  x: number
+  y: number
+}
+
 @Component({
   selector: 'app-wordcloud',
   templateUrl: './wordcloud.component.html',
@@ -32,42 +43,90 @@ enum Side {
 export class WordcloudComponent implements OnInit, AfterViewInit {
 
   constructor(
+    private readonly db: AngularFirestore,
     private readonly changeRef: ChangeDetectorRef,
   ) { }
-
-  @ViewChild('container', { static: false })
-  readonly container: ElementRef<HTMLElement>
 
   @ViewChildren('word')
   readonly renderedWords: QueryList<ElementRef<SVGGraphicsElement>>
 
-  words = ['test', 'test', 'test', 'gello']
+  goals: Goal[] = []
   boxes: Box[] = []
   viewBox: ViewBox = { x: -250, y: -250, width: 500, height: 500 }
+
+  maxFontSize = 100
+  minFontSize = 20
+
+  colorMap: string[] = [
+    'red',
+    'blue',
+    'green',
+    'purple',
+    'organe',
+  ]
+
+  words: string[]
 
   get viewBoxParsed() {
     return `${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`
   }
 
   ngOnInit() {
-    this.boxes = this.setup(this.words)
+
  }
 
   ngAfterViewInit() {
-    this.setupBoundingBoxes(this.boxes)
-    this.arrangeBoxes(this.boxes)
-    this.resizeViewBox()
-
-    console.log(this.boxes)
-
     this.changeRef.detectChanges()
+
+    this.renderedWords
+      .changes
+      .subscribe(() => {
+        console.log('rendered triggerd')
+        this.setupBoundingBoxes()
+        this.arrangeBoxes(this.boxes)
+        this.resizeViewBox()
+        this.changeRef.detectChanges()
+      })
+
+    this.db.collection<Goal>(goalCollection)
+      .valueChanges()
+      .pipe(
+        map(g => g.map(g => g.goal.toLowerCase()))
+      )
+      .subscribe(words => {
+        this.words = words
+        this.boxes = this.setup(this.words)
+        this.changeRef.detectChanges()
+      })
   }
 
-  normalizePosition(box: Box) {
+  refresh() {
+    this.boxes = this.setup(this.words)
+  }
+
+  getTooltip(box: Box) {
+    // todo use words no boxes
+    return `${box.word}: ${this.boxes.filter(b => b.word == box.word).length} / ${box.relevance * 100}%`
+  }
+
+  normalizePosition(box: Box): Pivot {
+    if(box.rotated) {
+      return {
+        x: box.x,
+        y: box.y,
+      }
+    }
+    else {
       return {
         x: box.x,
         y: box.y + box.height,
       }
+    }
+  }
+
+  getTranformation(box: Box) {
+    if(!box.rotated) return
+    return `rotate(90 ${box.x} ${box.y})`
   }
 
   setup(words: string[]): Box[] {
@@ -76,34 +135,40 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
     for (const word of words) {
       if(boxes.find(b => b.word === word)) continue // skip duplicates
 
+      const relevance = words.filter(w => w === word).length / words.length
+      const fontSize = (
+        (relevance * 100 * (this.maxFontSize - this.minFontSize) / 100) + this.minFontSize
+      )
+
       boxes.push({
         x: 0,
         y: 0,
         height: null,
         width: null,
-        //rotated: Math.random() >= 0.5,
-        rotated: true,
-        relevance: words.filter(w => w === word).length / words.length,
+        rotated: Math.random() >= 0.7,
+        relevance,
         word,
+        fontSize,
+        fill: this.colorMap[Math.floor(Math.random() * this.colorMap.length)],
       })
     }
 
     return boxes
   }
 
-  setupBoundingBoxes(boxes: Box[]) {
+  setupBoundingBoxes() {
     this.renderedWords.forEach(item => {
       const index = +item.nativeElement.getAttribute('index')
       const boundingBox = item.nativeElement.getBBox()
 
-      if(!boxes[index].rotated) {
-        boxes[index].width = boundingBox.width
-        boxes[index].height = boundingBox.height
+      if(!this.boxes[index].rotated) {
+        this.boxes[index].width = boundingBox.width
+        this.boxes[index].height = boundingBox.height
       }
       else {
         // if word will be rotated, then swap dimensions
-        boxes[index].height = boundingBox.width
-        boxes[index].width = boundingBox.height
+        this.boxes[index].height = boundingBox.width
+        this.boxes[index].width = boundingBox.height
       }
     })
   }

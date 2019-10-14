@@ -13,7 +13,16 @@
     [attr.index]="index"
     [attr.x]="normalizePosition(box).x"
     [attr.y]="normalizePosition(box).y"
-    fill="black">
+    [attr.transform]="getTranformation(box)"
+    [attr.font-size]="box.fontSize"
+    [attr.fill]="box.fill"
+    [matTooltip]="getTooltip(box)">
     {{ box.word }}
   </text>
 </svg>
+
+<button
+  mat-button
+  (click)="refresh()">
+  Neu Anordnen
+</button>
