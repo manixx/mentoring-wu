@@ -22,7 +22,9 @@ import {
   MatDividerModule,
   MatAutocompleteModule,
   MatSlideToggleModule,
-  MatChipsModule
+  MatChipsModule,
+  MatTooltipModule,
+  MatProgressBarModule
 } from '@angular/material'
 
 import firebaseConfig from '../environments/firebase';
@@ -84,6 +86,8 @@ import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
     MatAutocompleteModule,
     MatSlideToggleModule,
     MatChipsModule,
+    MatTooltipModule,
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

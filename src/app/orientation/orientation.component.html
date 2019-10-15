@@ -2,15 +2,16 @@
   *ngFor="let question of questions | async"
 >
   <mat-card-title>{{ question.question }}</mat-card-title>
+  <mat-card-subtitle>Max. {{ question.minRequired }} auswählen</mat-card-subtitle>
 
-  <mat-divider></mat-divider>
-
-    <mat-checkbox
-      *ngFor="let option of question.options"
-      (change)="changeAnswer(question, option)"
-    >
+  <mat-selection-list (selectionChange)="changeAnswer($event)">
+    <mat-list-option
+      [checkboxPosition]="before"
+      [value]="{ question: question, option: option }"
+      *ngFor="let option of question.options">
       {{ option }}
-    </mat-checkbox>
+    </mat-list-option>
+  </mat-selection-list>
 
 </mat-card>
 

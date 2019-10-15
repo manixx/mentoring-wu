@@ -9,3 +9,12 @@
 mat-list mat-form-field {
   width: 100%;
 }
+
+mat-progress-bar {
+  margin-left: 1em;
+}
+
+.mat-list-item .stats {
+  display: flex;
+  align-items: center;
+}

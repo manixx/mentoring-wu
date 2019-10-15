@@ -3,6 +3,8 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {orientationQuestionCollection, OrientationQuestion} from 'src/app/orientation/orientation-question';
 import {FormBuilder, Validators, FormGroup, FormArray, FormControl} from '@angular/forms';
 import firebase from 'firebase/app'
+import {OrientationAnswer, orientationAnswerCollection} from 'src/app/orientation/orientation-answer';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-orientation',
@@ -19,6 +21,34 @@ export class OrientationComponent implements OnInit {
   collectionRef = this.db.collection<OrientationQuestion>(orientationQuestionCollection)
   newQuestion = this.createForm({ question: null, options: [], minRequired: 0 })
   questions = this.fb.array([this.newQuestion])
+
+  answers = this.db.collection<OrientationAnswer>(orientationAnswerCollection)
+    .valueChanges()
+    .pipe(
+      map(answers => {
+        const questions = new Map<string, Map<string, number>>()
+
+        for (const answer of answers) {
+          if(!questions.has(answer.question)) {
+            questions.set(answer.question, new Map<string, number>())
+          }
+
+          const answerMap = questions.get(answer.question)
+
+          for (const option of answer.answers) {
+            if(!answerMap.has(option)) {
+              answerMap.set(option, 1)
+            }
+            else {
+              answerMap.set(option, answerMap.get(option) + 1)
+            }
+          }
+        }
+
+        console.log(questions)
+        return questions
+      })
+    )
 
   ngOnInit() {
     this.collectionRef
