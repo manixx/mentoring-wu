@@ -8,16 +8,16 @@
       [formControl]="newGoal"
       [matAutocomplete]="auto">
 
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
       <mat-option
         *ngFor="let suggestion of goalSuggestions | async"
-        [value]="suggestion">
+        [value]="suggestion" (click)="add()">
         {{ suggestion }}
       </mat-option>
     </mat-autocomplete>
 
     <mat-error *ngIf="hasError(newGoal, 'required')">
-      Du musst schon etwas eingeben
+      Bitte gib etwas ein
     </mat-error>
     <mat-error *ngIf="hasError(newGoal, 'minlength')">
       Du musst mindestens 4 Zeichen eingeben
@@ -26,17 +26,21 @@
   </mat-form-field>
 </form>
 
-<mat-card *ngIf="(goals | async)?.length === 0">
-  Gib dein erstes Ziel ein, indem oben etwas eingibst und <i>Enter</i> dürckst.
-</mat-card>
-
 <mat-list>
     <mat-list-item
       *ngFor="let goal of goals | async">
+
       <button
         mat-icon-button
-        (click)="setFavourite(goal)">
+        *ngIf="!goal.important"
+        (click)="setFavourite(goal, true)">
         <mat-icon>star_border</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        *ngIf="goal.important"
+        (click)="setFavourite(goal, false)">
+        <mat-icon>star</mat-icon>
       </button>
 
       <span>{{ goal.goal }}</span>
@@ -52,3 +56,6 @@
     <mat-divider></mat-divider>
 </mat-list>
 
+<button mat-raised-button color="primary" (click)="done()">
+  Ich bin fertig
+</button>

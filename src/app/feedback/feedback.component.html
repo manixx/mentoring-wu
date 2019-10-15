@@ -1,17 +1,19 @@
-<mat-card *ngFor="let question of questions | async">
+<mat-card *ngFor="let row of forms.controls">
 
   <mat-card-title>
-    {{ question.question }}
+    {{ row.get('question').value }}
   </mat-card-title>
 
-  <form>
+  <form [formGroup]="row">
     <mat-form-field>
-      <textarea matInput placeholder="Deine Antwort"></textarea>
+      <textarea
+        (change)="update()"
+        formControlName="answer" matInput placeholder="Deine Antwort"></textarea>
     </mat-form-field>
   </form>
 
 </mat-card>
 
-<button mat-raised-button color="primary">
+<button (click)="done()" mat-raised-button color="primary">
   Ich bin fertig!
 </button>

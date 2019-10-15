@@ -1,6 +1,20 @@
 <mat-tab-group dynamicHeight>
   <mat-tab label="Umfagen">
 
+    <mat-card *ngFor="let answer of answers | async">
+
+      <div *ngFor="let row of answer.answers">
+        <div *ngIf="row.answer">
+          <h3>{{ row.question }}</h3>
+          <p>{{ row.answer }}</p>
+        </div>
+      </div>
+
+    </mat-card>
+
+    <button mat-button (click)="cleanup()">
+      Daten löschen
+    </button>
 
   </mat-tab>
   <mat-tab label="Fragen">

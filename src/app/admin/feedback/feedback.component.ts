@@ -4,6 +4,8 @@ import {FormBuilder, Validators, FormControl} from '@angular/forms';
 import {settingsDocument, Setting} from 'src/app/setting';
 import {map} from 'rxjs/operators';
 import firebase from 'firebase/app'
+import {FeedbackAnswer} from 'src/app/feedback-answer';
+import {feedbackAnswerCollection} from 'src/app/feedback/feedback-answer';
 
 @Component({
   selector: 'app-admin-feedback',
@@ -20,6 +22,10 @@ export class FeedbackComponent implements OnInit {
   settings = this.db.doc<Setting>(settingsDocument)
   newQuestion = this.createFormControl(null)
   questions = this.fb.array([this.newQuestion])
+
+  answers = this.db
+    .collection<FeedbackAnswer>(feedbackAnswerCollection)
+    .valueChanges()
 
   ngOnInit() {
     this.settings
@@ -67,6 +73,15 @@ export class FeedbackComponent implements OnInit {
     return this.fb.control(value, [
       Validators.required
     ])
+  }
+
+  cleanup() {
+    const ref = this.db.collection(feedbackAnswerCollection)
+      .get()
+      .subscribe(answers => {
+        answers.forEach(a => a.ref.delete())
+        ref.unsubscribe()
+      })
   }
 
 }

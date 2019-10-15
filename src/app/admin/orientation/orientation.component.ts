@@ -23,32 +23,53 @@ export class OrientationComponent implements OnInit {
   questions = this.fb.array([this.newQuestion])
 
   answers = this.db.collection<OrientationAnswer>(orientationAnswerCollection)
-    .valueChanges()
-    .pipe(
-      map(answers => {
-        const questions = new Map<string, Map<string, number>>()
+      .valueChanges()
+      .pipe(
+        map(data => {
 
-        for (const answer of answers) {
-          if(!questions.has(answer.question)) {
-            questions.set(answer.question, new Map<string, number>())
+          const ret = {}
+
+          for (const row of data) {
+            for (const question of row.answers) {
+
+              if(!ret[question.question]) {
+                ret[question.question] = {}
+              }
+
+              for (const answer of question.options) {
+                if(!ret[question.question][answer]) {
+                  ret[question.question][answer] = 1
+                }
+                else {
+                  ret[question.question][answer] += 1
+                }
+              }
+            }
           }
 
-          const answerMap = questions.get(answer.question)
+          return ret
 
-          for (const option of answer.answers) {
-            if(!answerMap.has(option)) {
-              answerMap.set(option, 1)
-            }
-            else {
-              answerMap.set(option, answerMap.get(option) + 1)
-            }
-          }
-        }
+        })
+      )
 
-        console.log(questions)
-        return questions
+  getSum(question: { value: {} }, votes: number): number {
+    let sum = 0
+
+    Object.keys(question.value).forEach(key => {
+      sum += question.value[key]
+    })
+
+    return votes / sum * 100
+  }
+
+  cleanup() {
+    const handler = this.db.collection(orientationAnswerCollection)
+      .get()
+      .subscribe(data => {
+        data.forEach(d => d.ref.delete())
+        handler.unsubscribe()
       })
-    )
+  }
 
   ngOnInit() {
     this.collectionRef
@@ -58,6 +79,7 @@ export class OrientationComponent implements OnInit {
         questions.forEach(q => this.questions.push(this.createForm(q)))
         this.questions.push(this.newQuestion)
       })
+
   }
 
   getOptions(question: FormGroup) {

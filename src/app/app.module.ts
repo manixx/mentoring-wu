@@ -24,7 +24,8 @@ import {
   MatSlideToggleModule,
   MatChipsModule,
   MatTooltipModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatDialogModule
 } from '@angular/material'
 
 import firebaseConfig from '../environments/firebase';
@@ -43,6 +44,7 @@ import { OrientationComponent as AdminOrientationComponent } from './admin/orien
 import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/feedback.component'
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
+import { DoneComponent } from './done/done.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,7 @@ import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
     AdminOrientationComponent,
     AdminFeedbackComponent,
     WordcloudComponent,
+    DoneComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +91,7 @@ import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
     MatChipsModule,
     MatTooltipModule,
     MatProgressBarModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
@@ -95,6 +99,7 @@ import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
     AdminGoalComponent,
     AdminOrientationComponent,
     AdminFeedbackComponent,
+    DoneComponent,
   ]
 })
 export class AppModule { }

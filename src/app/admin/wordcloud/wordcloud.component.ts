@@ -61,8 +61,8 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
     'red',
     'blue',
     'green',
-    'purple',
-    'organe',
+    'darkorange',
+    'cadetblue',
   ]
 
   words: string[]
@@ -193,18 +193,18 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
           switch(side) {
             case Side.Top:
               box.x = parentBox.x
-              box.y = parentBox.y - box.height
+              box.y = parentBox.y - box.height - 15
               break;
             case Side.Bottom:
               box.x = parentBox.x
-              box.y = parentBox.y + parentBox.height
+              box.y = parentBox.y + parentBox.height + 15
               break;
             case Side.Left:
-              box.x = parentBox.x - box.width
+              box.x = parentBox.x - box.width - 15
               box.y = parentBox.y
               break;
             case Side.Right:
-              box.x = parentBox.x + parentBox.width
+              box.x = parentBox.x + parentBox.width + 15
               box.y = parentBox.y
               break;
           }
@@ -230,5 +230,14 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
     this.viewBox.y = Math.min(...this.boxes.map(b => b.y))
     this.viewBox.width = Math.abs(this.viewBox.x) + Math.max(...this.boxes.map(b => b.x + b.width))
     this.viewBox.height = Math.abs(this.viewBox.y) + Math.max(...this.boxes.map(b => b.y + b.height))
+  }
+
+  cleanup() {
+    const ref = this.db.collection(goalCollection)
+      .get()
+      .subscribe(goals => {
+        goals.forEach(g => g.ref.delete())
+        ref.unsubscribe()
+      })
   }
 }

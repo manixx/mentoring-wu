@@ -5,3 +5,8 @@ mat-list-item span {
 mat-form-field {
   width: 100%;
 }
+
+button[mat-raised-button] {
+  margin-top: 1em;
+  width: 100%;
+}

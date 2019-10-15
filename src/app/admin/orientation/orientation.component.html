@@ -1,21 +1,30 @@
 <mat-tab-group dynamicHeight>
   <mat-tab label="Auswertung">
 
-    <mat-card>
-      <mat-card-title>Frage</mat-card-title>
+    <mat-card *ngFor="let question of answers | async | keyvalue">
+      <mat-card-title>{{ question.key }}</mat-card-title>
 
       <mat-list>
-        <mat-list-item>
+        <mat-list-item *ngFor="let answer of question.value | keyvalue">
           <div mat-line>
-          Option
+            {{ answer.key }}
           </div>
           <div mat-line class="stats">
-            30 Stimmen / 40%
-            <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+            {{ answer.value }} Stimme(n) /
+            {{ getSum(question, answer.value) | number:'1.2-2' }}%
+            <mat-progress-bar
+              mode="determinate"
+              [value]="getSum(question, answer.value)"
+              ></mat-progress-bar>
           </div>
         </mat-list-item>
       </mat-list>
     </mat-card>
+
+
+    <button mat-button (click)="cleanup()">
+      Daten löschen
+    </button>
 
   </mat-tab>
   <mat-tab label="Fragen">

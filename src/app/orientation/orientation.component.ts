@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {SessionService} from 'src/app/session.service';
 import {orientationQuestionCollection, OrientationQuestion} from 'src/app/orientation/orientation-question';
-import {MatList, MatSelectionList, MatSnackBar, MatSelectionListChange, MatListOption} from '@angular/material';
+import {MatList, MatSelectionList, MatSnackBar, MatSelectionListChange, MatListOption, MatDialog, MatDialogRef} from '@angular/material';
 import {OrientationAnswer, orientationAnswerCollection} from 'src/app/orientation/orientation-answer';
-import firebase from 'firebase/app'
+import {DoneComponent} from 'src/app/done/done.component';
 
 interface ListOption {
   question: OrientationQuestion
@@ -16,54 +16,62 @@ interface ListOption {
   templateUrl: './orientation.component.html',
   styleUrls: ['./orientation.component.css']
 })
-export class OrientationComponent implements OnInit, AfterViewInit {
+export class OrientationComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private readonly db: AngularFirestore,
     private readonly session: SessionService,
+    private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
   ) { }
 
   @ViewChildren(MatSelectionList)
   private readonly lists: QueryList<MatSelectionList>
 
-  questions = this.db.collection<OrientationQuestion>(orientationQuestionCollection)
-    .valueChanges({ idField: 'id' })
+  questions = this.db
+    .collection<OrientationQuestion>(orientationQuestionCollection)
+    .valueChanges()
 
-  ngOnInit() {
-    this.questions.subscribe(what => console.log(what))
-  }
+  answersRef = this.db
+      .collection<OrientationAnswer>(orientationAnswerCollection)
+      .doc(this.session.key)
+
+  dialogRef: MatDialogRef<DoneComponent>
 
   ngAfterViewInit() {
-    this.lists.changes
-      .subscribe(() => {
-        console.log(this.lists)
-      })
+  }
+
+  ngOnDestroy() {
+    if(this.dialogRef) {
+      this.dialogRef.close()
+    }
   }
 
   changeAnswer(event: MatSelectionListChange) {
-    const { question, option } = event.option.value as ListOption
+    const { question } = event.option.value as ListOption
 
     if(event.source.selectedOptions.selected.length > question.minRequired) {
-      this.snackBar.open(`Du kannst nur ${question.minRequired} auswählen. Ändere deine Auswahl.`)
+      this.snackBar.open(`Du kannst nur ${question.minRequired} auswählen. Ändere deine Auswahl.`, null, { duration: 1000 })
       event.option.selected = false
       return
     }
 
-    this.db.collection<OrientationAnswer>(orientationAnswerCollection)
-      .add({
-        question: question.question,
-        session: this.session.key,
-        answers: this.toggleOption(event.option, option)
-      })
+    const answers = this.lists.map(list => {
+      const values = list.selectedOptions.selected
+
+      return {
+        question: list.options.first.value.question.question,
+        options: values.map(o => o.value.option),
+      }
+    })
+
+    this.answersRef.set({
+      session: this.session.key,
+      answers,
+    })
   }
 
-  toggleOption(matOption: MatListOption, option: string) {
-    if(matOption.selected) {
-      return firebase.firestore.FieldValue.arrayUnion(option)
-    }
-    else {
-      return firebase.firestore.FieldValue.arrayRemove(option)
-    }
+  done() {
+    this.dialogRef = this.dialog.open(DoneComponent, { disableClose: false })
   }
 }
