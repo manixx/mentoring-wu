@@ -1,50 +1,54 @@
-<form (submit)="add()">
-  <mat-form-field
-    hintLabel="Ab {{ charsUntilAutocompletion }} Zeichen bekommst du Vorschläge!">
+<mat-card>
+  <mat-card-title>
+    Sag mir deine Ziele! 😋
+  </mat-card-title>
+  <mat-card-subtitle>
+    Was erwartest du dir vom Mentoring-Program?
+  </mat-card-subtitle>
 
-    <input
-      matInput
-      placeholder="Gib Dein Ziel ein"
-      [formControl]="newGoal"
-      [matAutocomplete]="auto">
+  <form (submit)="add()">
+    <mat-form-field
+      hintLabel="Ab {{ charsUntilAutocompletion }} Zeichen bekommst du Vorschläge!"
+      >
+      <input
+        matInput
+        placeholder="Gib hier dein Ziel ein und drücke Enter"
+        [formControl]="newGoal"
+        [matAutocomplete]="auto"
+        />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        autoActiveFirstOption
+        >
+        <mat-option
+          *ngFor="let suggestion of goalSuggestions | async"
+          [value]="suggestion" (click)="add()"
+          >
+          {{ suggestion }}
+        </mat-option>
+      </mat-autocomplete>
+        <mat-error *ngIf="hasError(newGoal, 'required')">
+          Bitte gib etwas ein 🙈
+        </mat-error>
+    </mat-form-field>
+  </form>
 
-    <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-      <mat-option
-        *ngFor="let suggestion of goalSuggestions | async"
-        [value]="suggestion" (click)="add()">
-        {{ suggestion }}
-      </mat-option>
-    </mat-autocomplete>
-
-    <mat-error *ngIf="hasError(newGoal, 'required')">
-      Bitte gib etwas ein
-    </mat-error>
-    <mat-error *ngIf="hasError(newGoal, 'minlength')">
-      Du musst mindestens 4 Zeichen eingeben
-    </mat-error>
-
-  </mat-form-field>
-</form>
-
-<mat-list>
+  <mat-list>
     <mat-list-item
-      *ngFor="let goal of goals | async">
-
+      *ngFor="let goal of goals | async"
+      >
       <button
         mat-icon-button
-        *ngIf="!goal.important"
-        (click)="setFavourite(goal, true)">
-        <mat-icon>star_border</mat-icon>
+        matTooltip="Das ist mir besonders wichtig"
+        matTooltipPosition="right"
+        (click)="setFavourite(goal, !goal.important)"
+        >
+        <mat-icon *ngIf="!goal.important">star_border</mat-icon>
+        <mat-icon *ngIf="goal.important">star</mat-icon>
       </button>
-      <button
-        mat-icon-button
-        *ngIf="goal.important"
-        (click)="setFavourite(goal, false)">
-        <mat-icon>star</mat-icon>
-      </button>
-
-      <span>{{ goal.goal }}</span>
-
+      <span>
+        {{ goal.goal }}
+      </span>
       <button
         color="warn"
         mat-icon-button
@@ -52,10 +56,11 @@
         <mat-icon>delete_forever</mat-icon>
       </button>
     </mat-list-item>
+  </mat-list>
 
-    <mat-divider></mat-divider>
-</mat-list>
-
-<button mat-raised-button color="primary" (click)="done()">
-  Ich bin fertig
-</button>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="done()">
+      Ich bin fertig ✌🥳
+    </button>
+  </mat-card-actions>
+</mat-card>

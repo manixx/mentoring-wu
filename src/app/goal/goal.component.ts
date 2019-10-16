@@ -23,20 +23,24 @@ export class GoalComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
   ) { }
 
-  goals = this.db.collection<Goal>(
+  suggestions: string[] = []
+  charsUntilAutocompletion = 5
+  dialogRef: MatDialogRef<DoneComponent>
+
+  goals = this.db
+    .collection<Goal>(
       goalCollection,
       ref => ref.where('session', '==', this.session.key)
     )
-      .valueChanges({ idField: 'id' })
+    .valueChanges({ idField: 'id' })
 
-  settings = this.db.doc<Setting>(settingsDocument)
+  settings = this.db
+    .doc<Setting>(settingsDocument)
 
-  newGoal = this.formBuilder.control('', [
-    Validators.required,
-    Validators.minLength(4),
-  ])
-
-  suggestions: string[] = []
+  newGoal = this.formBuilder
+    .control('', [
+      Validators.required,
+    ])
 
   goalSuggestions = this.newGoal
     .valueChanges
@@ -51,8 +55,6 @@ export class GoalComponent implements OnInit, OnDestroy {
       })
     )
 
-  charsUntilAutocompletion = 4
-
   ngOnInit() {
     this.settings
       .valueChanges()
@@ -61,9 +63,6 @@ export class GoalComponent implements OnInit, OnDestroy {
       )
       .subscribe(suggestions => this.suggestions = suggestions)
   }
-
-
-  dialogRef: MatDialogRef<DoneComponent>
 
   ngOnDestroy() {
     if(this.dialogRef) {
@@ -75,17 +74,24 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.newGoal.markAsTouched()
     if(!this.newGoal.valid) return
 
-    this.db.collection<Goal>(goalCollection).add({
-      session: this.session.key,
-      goal: this.newGoal.value,
-      important: false
-    })
+    this.db
+      .collection<Goal>(goalCollection)
+      .add({
+        session: this.session.key,
+        goal: this.newGoal.value,
+        important: false
+      })
+
     this.newGoal.reset()
   }
 
   delete(goal: Goal) {
-    this.db.doc(`${goalCollection}/${goal.id}`).delete()
-    this.snackBar.open("Ziel gelöscht")
+    this.db
+      .collection(goalCollection)
+      .doc(goal.id)
+      .delete()
+    this.snackBar
+      .open('Dein Ziel wurde gelöscht 🤭')
   }
 
 

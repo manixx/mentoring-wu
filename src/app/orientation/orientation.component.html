@@ -1,20 +1,34 @@
+<mat-card>
+  <mat-card-title>
+    Gib mir deine persönlichen Präferenzen! 🤗
+  </mat-card-title>
+  <mat-card-subtitle>
+    Beachte, dass du bei manchen Fragen nur begrenzte Optionen auswählen kannst!
+  </mat-card-subtitle>
+</mat-card>
+
 <mat-card
   *ngFor="let question of questions | async"
->
-  <mat-card-title>{{ question.question }}</mat-card-title>
-  <mat-card-subtitle>Max. {{ question.minRequired }} auswählen</mat-card-subtitle>
+  >
+
+  <mat-card-title>
+    {{ question.question }}
+  </mat-card-title>
+  <mat-card-subtitle>
+    Max. {{ question.minRequired }} auswählen
+  </mat-card-subtitle>
 
   <mat-selection-list (selectionChange)="changeAnswer($event)">
     <mat-list-option
-      [checkboxPosition]="before"
+      checkboxPosition="before"
       [value]="{ question: question, option: option }"
-      *ngFor="let option of question.options">
+      *ngFor="let option of question.options"
+      >
       {{ option }}
     </mat-list-option>
   </mat-selection-list>
-
 </mat-card>
 
 <button (click)="done()" mat-raised-button color="primary">
-  Ich bin fertig!
+  Ich bin fertig! 😎💥
 </button>
