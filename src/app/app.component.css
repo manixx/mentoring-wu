@@ -10,3 +10,13 @@
 mat-toolbar-row {
   padding-left: 0;
 }
+
+#footer {
+  text-align: center;
+  font-size: 9px;
+}
+
+#footer a {
+  color: gray;
+  text-decoration: none;
+}

@@ -101,18 +101,18 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   async setFavourite(goal: Goal, value: boolean) {
 
-    const col = this.db.collection<Goal>(goalCollection)
+    const newFavorite = this.db.collection<Goal>(goalCollection).doc(goal.id);
+    const otherGoals = this.db.collection<Goal>(goalCollection, ref => ref.where('session', '==', this.session.key))
 
-    const handler = this.db
-      .collection<Goal>(goalCollection, ref => ref.where('session', '==', this.session.key))
+    const handler = otherGoals
       .get()
       .subscribe(goals => {
-        goals.forEach(g => g.ref.update({
-          important: false
-        }))
-        col
-          .doc(goal.id)
-          .update({ important: value })
+
+        this.db.firestore.runTransaction(tr => {
+          goals.forEach(g => tr.update(g.ref, { important: false }))
+          tr.update(newFavorite.ref, { important: value })
+          return Promise.resolve()
+        })
         handler.unsubscribe()
       })
   }

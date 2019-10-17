@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     .valueChanges()
     .subscribe(settings => {
       // skip admin access
-      if(this.router.url == '/admin') {
+      if(window.location.pathname == '/admin') {
         return
       }
 

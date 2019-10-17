@@ -1,3 +1,7 @@
-text {
+svg {
   transition: all 2s;
+}
+
+.blurred {
+  filter: blur(15px);
 }

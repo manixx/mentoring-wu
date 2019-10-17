@@ -29,7 +29,7 @@ export class OrientationComponent implements AfterViewInit, OnDestroy {
   private readonly lists: QueryList<MatSelectionList>
 
   questions = this.db
-    .collection<OrientationQuestion>(orientationQuestionCollection)
+    .collection<OrientationQuestion>(orientationQuestionCollection, ref => ref.orderBy('index'))
     .valueChanges()
 
   answersRef = this.db

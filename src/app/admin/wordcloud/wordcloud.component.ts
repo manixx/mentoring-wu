@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {Goal, goalCollection} from 'src/app/goal/goal';
 import {map, filter} from 'rxjs/operators';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {Setting, settingsDocument} from 'src/app/setting';
 
 interface Box {
   x: number
@@ -75,13 +76,19 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
 
  }
 
+  openSection = this.db
+     .doc<Setting>(settingsDocument)
+      .valueChanges()
+      .pipe(
+        map(s => !!s.openSection)
+      )
+
   ngAfterViewInit() {
     this.changeRef.detectChanges()
 
     this.renderedWords
       .changes
       .subscribe(() => {
-        console.log('rendered triggerd')
         this.setupBoundingBoxes()
         this.arrangeBoxes(this.boxes)
         this.resizeViewBox()
@@ -90,23 +97,21 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
 
     this.db.collection<Goal>(goalCollection)
       .valueChanges()
-      .pipe(
-        map(g => g.map(g => g.goal.toLowerCase()))
-      )
-      .subscribe(words => {
-        this.words = words
-        this.boxes = this.setup(this.words)
+      .subscribe(goals => {
+        this.goals = goals
+        this.words = this.goals.map(g => g.goal.toLowerCase())
+        this.boxes = this.setup(this.words, this.goals)
         this.changeRef.detectChanges()
       })
+
   }
 
   refresh() {
-    this.boxes = this.setup(this.words)
+    this.boxes = this.setup(this.words, this.goals)
   }
 
   getTooltip(box: Box) {
-    // todo use words no boxes
-    return `${box.word}: ${this.boxes.filter(b => b.word == box.word).length} / ${box.relevance * 100}%`
+    return `${box.word}: ~${Math.floor(box.relevance * 100)}%`
   }
 
   normalizePosition(box: Box): Pivot {
@@ -125,17 +130,27 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
   }
 
   getTranformation(box: Box) {
-    if(!box.rotated) return
-    return `rotate(90 ${box.x} ${box.y})`
+    //const normalized = this.normalizePosition(box)
+    //let transform = `translate(${normalized.x} ${normalized.y})`
+
+    if(box.rotated) {
+      return `rotate(90 ${box.x} ${box.y})`
+    }
+
+    //return transform
   }
 
-  setup(words: string[]): Box[] {
+
+  setup(words: string[], goals: Goal[]): Box[] {
     const boxes: Box[] = []
 
     for (const word of words) {
       if(boxes.find(b => b.word === word)) continue // skip duplicates
 
-      const relevance = words.filter(w => w === word).length / words.length
+      const relevance = (
+        (words.filter(w => w === word).length + goals.filter(g => g.goal.toLowerCase() === word && g.important).length)
+        / words.length
+      )
       const fontSize = (
         (relevance * 100 * (this.maxFontSize - this.minFontSize) / 100) + this.minFontSize
       )
@@ -193,18 +208,18 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
           switch(side) {
             case Side.Top:
               box.x = parentBox.x
-              box.y = parentBox.y - box.height - 15
+              box.y = parentBox.y - box.height - 10
               break;
             case Side.Bottom:
               box.x = parentBox.x
-              box.y = parentBox.y + parentBox.height + 15
+              box.y = parentBox.y + parentBox.height + 10
               break;
             case Side.Left:
-              box.x = parentBox.x - box.width - 15
+              box.x = parentBox.x - box.width - 10
               box.y = parentBox.y
               break;
             case Side.Right:
-              box.x = parentBox.x + parentBox.width + 15
+              box.x = parentBox.x + parentBox.width + 10
               box.y = parentBox.y
               break;
           }
@@ -226,10 +241,10 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
   }
 
   resizeViewBox() {
-    this.viewBox.x = Math.min(...this.boxes.map(b => b.x))
-    this.viewBox.y = Math.min(...this.boxes.map(b => b.y))
-    this.viewBox.width = Math.abs(this.viewBox.x) + Math.max(...this.boxes.map(b => b.x + b.width))
-    this.viewBox.height = Math.abs(this.viewBox.y) + Math.max(...this.boxes.map(b => b.y + b.height))
+    this.viewBox.x = Math.min(...this.boxes.map(b => b.x)) - 5
+    this.viewBox.y = Math.min(...this.boxes.map(b => b.y)) - 5
+    this.viewBox.width = Math.abs(this.viewBox.x) + Math.max(...this.boxes.map(b => b.x + b.width)) + 5
+    this.viewBox.height = Math.abs(this.viewBox.y) + Math.max(...this.boxes.map(b => b.y + b.height)) + 5
   }
 
   cleanup() {
