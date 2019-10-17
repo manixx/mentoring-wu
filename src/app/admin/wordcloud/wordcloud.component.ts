@@ -64,6 +64,10 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
     'green',
     'darkorange',
     'cadetblue',
+    'blueviolet',
+    'darkgoldenrod',
+    'deeppink',
+    'navy',
   ]
 
   words: string[]
@@ -188,6 +192,10 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
     })
   }
 
+  private randomBetweenRange(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
   arrangeBoxes(boxes: Box[]) {
     // sort after relevance
     boxes.sort((a, b) => b.relevance - a.relevance)
@@ -205,23 +213,27 @@ export class WordcloudComponent implements OnInit, AfterViewInit {
       parentBox: for (const parentBox of parentBoxes) {
         for (const side of sides) {
 
-          switch(side) {
-            case Side.Top:
-              box.x = parentBox.x
-              box.y = parentBox.y - box.height - 10
-              break;
-            case Side.Bottom:
-              box.x = parentBox.x
-              box.y = parentBox.y + parentBox.height + 10
-              break;
-            case Side.Left:
-              box.x = parentBox.x - box.width - 10
-              box.y = parentBox.y
-              break;
-            case Side.Right:
-              box.x = parentBox.x + parentBox.width + 10
-              box.y = parentBox.y
-              break;
+          for (let i = 0; i < 50; i++) {
+
+            switch(side) {
+              case Side.Top:
+                box.x = this.randomBetweenRange(parentBox.x, parentBox.x + parentBox.width)
+                box.y = parentBox.y - box.height - 5
+                break;
+              case Side.Bottom:
+                box.x = this.randomBetweenRange(parentBox.x, parentBox.x + parentBox.width)
+                box.y = parentBox.y + parentBox.height + 5
+                break;
+              case Side.Left:
+                box.x = parentBox.x - box.width - 5
+                box.y = this.randomBetweenRange(parentBox.y, parentBox.y + parentBox.height)
+                break;
+              case Side.Right:
+                box.x = parentBox.x + parentBox.width + 5
+                box.y = this.randomBetweenRange(parentBox.y, parentBox.y + parentBox.height)
+                break;
+            }
+
           }
 
           // check if box is colliding with any other boxes
