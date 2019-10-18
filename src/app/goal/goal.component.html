@@ -6,7 +6,7 @@
     Was erwartest du dir vom Mentoring-Program?
   </mat-card-subtitle>
 
-  <form (submit)="add()">
+  <form #formDirective="ngForm" (submit)="add(formDirective)">
     <mat-form-field
       hintLabel="Ab {{ charsUntilAutocompletion }} Zeichen bekommst du Vorschläge!"
       >

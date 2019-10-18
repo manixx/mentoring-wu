@@ -8,7 +8,7 @@
   width="100%"
   height="700"
   [attr.viewBox]="viewBoxParsed"
-  [ngClass]="{'blurred': openSection | async}"
+  [ngClass]="{'blurred': openSection | async, 'heavy-blurred': boxes.length < 5}"
   >
   <!--<rect-->
     <!--*ngFor="let box of boxes"-->

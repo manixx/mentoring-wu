@@ -3,7 +3,7 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {SessionService} from 'src/app/session.service';
 import {Goal, goalCollection} from 'src/app/goal/goal';
 import {MatSnackBar, MatDialog, MatDialogRef} from '@angular/material';
-import {FormBuilder, Validators, FormControl} from '@angular/forms';
+import {FormBuilder, Validators, FormControl, FormGroupDirective} from '@angular/forms';
 import {Setting, settingsDocument} from 'src/app/setting';
 import {map, filter} from 'rxjs/operators';
 import {DoneComponent} from 'src/app/done/done.component';
@@ -70,7 +70,7 @@ export class GoalComponent implements OnInit, OnDestroy {
     }
   }
 
-  add() {
+  add(formDirective: FormGroupDirective) {
     this.newGoal.markAsTouched()
     if(!this.newGoal.valid) return
 
@@ -83,6 +83,7 @@ export class GoalComponent implements OnInit, OnDestroy {
       })
 
     this.newGoal.reset()
+    formDirective.resetForm()
   }
 
   delete(goal: Goal) {
