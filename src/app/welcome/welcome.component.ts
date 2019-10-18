@@ -24,8 +24,8 @@ export class WelcomeComponent implements OnInit {
         map(s => s.openSection),
       )
       .subscribe(section => {
-        this.router.navigateByUrl(section.url)
-      })
+        this.router.navigateByUrl(section.url);
+      });
   }
 
 }

@@ -1,6 +1,6 @@
 export interface Section {
-  key: string
-  url: string
+  key: string;
+  url: string;
 }
 
 export enum SectionKey {

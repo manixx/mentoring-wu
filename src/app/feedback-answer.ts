@@ -4,5 +4,5 @@ export interface FeedbackAnswer extends SessionAware {
   answers: [{
     question: string
     answer: string
-  }]
+  }];
 }

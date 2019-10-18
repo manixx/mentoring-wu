@@ -1,3 +1,3 @@
 export interface SessionAware {
-  session: string
+  session: string;
 }

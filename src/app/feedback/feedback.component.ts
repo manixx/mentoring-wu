@@ -27,9 +27,9 @@ export class FeedbackComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
   ) { }
 
-  forms = this.fb.array([])
+  forms = this.fb.array([]);
 
-  dialogRef: MatDialogRef<DoneComponent>
+  dialogRef: MatDialogRef<DoneComponent>;
 
   ngOnInit() {
     this.db.doc<Setting>(settingsDocument)
@@ -38,34 +38,34 @@ export class FeedbackComponent implements OnInit, OnDestroy {
         map(s => s.feedbackQuestions)
       )
       .subscribe(questions => {
-        this.forms.clear()
+        this.forms.clear();
 
         questions.forEach(q => this.forms.push(this.fb.group({
           question: q,
           answer: this.fb.control(null),
-        })))
-      })
+        })));
+      });
   }
 
   ngOnDestroy() {
-    if(this.dialogRef) {
-      this.dialogRef.close()
+    if (this.dialogRef) {
+      this.dialogRef.close();
     }
   }
 
   update() {
-    const values = this.forms.value
+    const values = this.forms.value;
 
     this.db.collection<FeedbackAnswer>(feedbackAnswerCollection)
       .doc(this.session.key)
       .set({
         session: this.session.key,
         answers: values,
-      })
+      });
   }
 
   done() {
-    this.dialogRef = this.dialog.open(DoneComponent, { disableClose: false })
+    this.dialogRef = this.dialog.open(DoneComponent, { disableClose: false });
   }
 
 }

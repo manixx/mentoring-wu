@@ -26,7 +26,7 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatDialogModule
-} from '@angular/material'
+} from '@angular/material';
 
 import firebaseConfig from '../environments/firebase';
 import { FeedbackComponent } from './feedback/feedback.component';
@@ -39,9 +39,9 @@ import { AdminOrientationQuestionComponent } from './form-controls/admin-orienta
 import { WelcomeComponent } from './welcome/welcome.component';
 import { GoalComponent } from './goal/goal.component';
 import { AdminComponent } from './admin/admin.component';
-import { GoalComponent as AdminGoalComponent } from './admin/goal/goal.component'
-import { OrientationComponent as AdminOrientationComponent } from './admin/orientation/orientation.component'
-import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/feedback.component'
+import { GoalComponent as AdminGoalComponent } from './admin/goal/goal.component';
+import { OrientationComponent as AdminOrientationComponent } from './admin/orientation/orientation.component';
+import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/feedback.component';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
 import { DoneComponent } from './done/done.component';

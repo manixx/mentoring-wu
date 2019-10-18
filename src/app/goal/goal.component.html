@@ -22,7 +22,7 @@
         >
         <mat-option
           *ngFor="let suggestion of goalSuggestions | async"
-          [value]="suggestion" (click)="add()"
+          [value]="suggestion" (click)="add(formDirective)"
           >
           {{ suggestion }}
         </mat-option>

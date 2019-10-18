@@ -1,5 +1,5 @@
 export interface FeedbackQuestion {
-  question: string
+  question: string;
 }
 
-export const feedbackQuestionCollection = 'admin/settings/feedback-questions'
+export const feedbackQuestionCollection = 'admin/settings/feedback-questions';

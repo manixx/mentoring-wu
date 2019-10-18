@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivateChild, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, from, combineLatest } from 'rxjs';
-import { auth } from 'firebase/app';
+import { auth as fbAuth } from 'firebase/app';
 import {map, switchMap, delay} from 'rxjs/operators';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {settingsDocument, Setting} from 'src/app/setting';
@@ -27,14 +27,15 @@ export class AdminGuard implements CanActivate {
     ])
     .pipe(
       switchMap(([user, admins]) => {
-        if(user) {
-          if(!admins.includes(user.email))
-            return from([false])
-          return from([true])
+        if (user) {
+          if (!admins.includes(user.email)) {
+            return from([false]);
+          }
+          return from([true]);
         }
-        return from(this.auth.auth.signInWithRedirect(new auth.GoogleAuthProvider))
-          .pipe(map(() => true))
+        return from(this.auth.auth.signInWithRedirect(new fbAuth.GoogleAuthProvider()))
+          .pipe(map(() => true));
       })
-    )
+    );
   }
 }

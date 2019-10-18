@@ -21,16 +21,16 @@ export class AppComponent implements OnInit {
     .valueChanges()
     .subscribe(settings => {
       // skip admin access
-      if(window.location.pathname == '/admin') {
-        return
+      if (window.location.pathname === '/admin') {
+        return;
       }
 
-      if(settings.openSection) {
-        this.router.navigate([settings.openSection.url])
-        return
+      if (settings.openSection) {
+        this.router.navigate([settings.openSection.url]);
+        return;
       }
 
-      this.router.navigate([''])
-    })
+      this.router.navigate(['']);
+    });
   }
 }

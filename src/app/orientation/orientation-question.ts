@@ -1,8 +1,8 @@
 export interface OrientationQuestion {
-  id?: string
-  question: string
-  options: string[]
-  minRequired: number
+  id?: string;
+  question: string;
+  options: string[];
+  minRequired: number;
 }
 
-export const orientationQuestionCollection = 'admin/settings/orientation-questions'
+export const orientationQuestionCollection = 'admin/settings/orientation-questions';

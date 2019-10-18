@@ -9,24 +9,25 @@ import {FormControl} from '@angular/forms';
 export class GoalFormControlComponent {
 
   @Input()
-  appFormControl: FormControl
+  appFormControl: FormControl;
 
   @Input()
-  placeholder: string
+  placeholder: string;
 
   @Input()
-  submit: () => void
+  submit: () => void;
 
   hasError(errorCode: string) {
-    if(!this.appFormControl.dirty)
-      return false
+    if (!this.appFormControl.dirty) {
+      return false;
+    }
 
-    return this.appFormControl.hasError(errorCode)
+    return this.appFormControl.hasError(errorCode);
   }
 
   change() {
-    if(!this.submit) return
-    this.submit()
+    if (!this.submit) { return; }
+    this.submit();
   }
 
 }

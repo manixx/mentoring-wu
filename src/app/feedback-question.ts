@@ -1,4 +1,4 @@
 export interface FeedbackQuestion {
-  question: string
-  required: boolean
+  question: string;
+  required: boolean;
 }

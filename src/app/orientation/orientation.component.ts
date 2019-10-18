@@ -7,8 +7,8 @@ import {OrientationAnswer, orientationAnswerCollection} from 'src/app/orientatio
 import {DoneComponent} from 'src/app/done/done.component';
 
 interface ListOption {
-  question: OrientationQuestion
-  option: string
+  question: OrientationQuestion;
+  option: string;
 }
 
 @Component({
@@ -26,52 +26,52 @@ export class OrientationComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   @ViewChildren(MatSelectionList)
-  private readonly lists: QueryList<MatSelectionList>
+  private readonly lists: QueryList<MatSelectionList>;
 
   questions = this.db
     .collection<OrientationQuestion>(orientationQuestionCollection, ref => ref.orderBy('index'))
-    .valueChanges()
+    .valueChanges();
 
   answersRef = this.db
       .collection<OrientationAnswer>(orientationAnswerCollection)
-      .doc(this.session.key)
+      .doc(this.session.key);
 
-  dialogRef: MatDialogRef<DoneComponent>
+  dialogRef: MatDialogRef<DoneComponent>;
 
   ngAfterViewInit() {
   }
 
   ngOnDestroy() {
-    if(this.dialogRef) {
-      this.dialogRef.close()
+    if (this.dialogRef) {
+      this.dialogRef.close();
     }
   }
 
   changeAnswer(event: MatSelectionListChange) {
-    const { question } = event.option.value as ListOption
+    const { question } = event.option.value as ListOption;
 
-    if(event.source.selectedOptions.selected.length > question.minRequired) {
-      this.snackBar.open(`Du kannst nur ${question.minRequired} auswählen. Ändere deine Auswahl.`, null, { duration: 1000 })
-      event.option.selected = false
-      return
+    if (event.source.selectedOptions.selected.length > question.minRequired) {
+      this.snackBar.open(`Du kannst nur ${question.minRequired} auswählen. Ändere deine Auswahl.`, null, { duration: 1000 });
+      event.option.selected = false;
+      return;
     }
 
     const answers = this.lists.map(list => {
-      const values = list.selectedOptions.selected
+      const values = list.selectedOptions.selected;
 
       return {
         question: list.options.first.value.question.question,
         options: values.map(o => o.value.option),
-      }
-    })
+      };
+    });
 
     this.answersRef.set({
       session: this.session.key,
       answers,
-    })
+    });
   }
 
   done() {
-    this.dialogRef = this.dialog.open(DoneComponent, { disableClose: false })
+    this.dialogRef = this.dialog.open(DoneComponent, { disableClose: false });
   }
 }

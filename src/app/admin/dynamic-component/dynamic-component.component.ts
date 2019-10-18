@@ -1,4 +1,14 @@
-import { Component, ComponentFactoryResolver, Input, ViewChild, ViewContainerRef, AfterViewInit, OnDestroy, ComponentRef, AfterContentInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  Input,
+  ViewChild,
+  ViewContainerRef,
+  AfterViewInit,
+  OnDestroy,
+  ComponentRef,
+  ChangeDetectorRef
+} from '@angular/core';
 
 @Component({
   selector: 'app-dynamic-component',
@@ -13,25 +23,25 @@ export class DynamicComponentComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   @Input()
-  component: any
+  component: any;
 
   @ViewChild('container', { read: ViewContainerRef, static: false })
-  container: ViewContainerRef
+  container: ViewContainerRef;
 
-  private componentRef: ComponentRef<unknown>
+  private componentRef: ComponentRef<unknown>;
 
   ngAfterViewInit() {
-    this.container.clear()
+    this.container.clear();
 
-    const factory = this.resolver.resolveComponentFactory(this.component)
+    const factory = this.resolver.resolveComponentFactory(this.component);
 
-    this.componentRef =  this.container.createComponent(factory)
-    this.cd.detectChanges()
+    this.componentRef =  this.container.createComponent(factory);
+    this.cd.detectChanges();
   }
 
   ngOnDestroy() {
-    if(this.componentRef) {
-      this.componentRef.destroy()
+    if (this.componentRef) {
+      this.componentRef.destroy();
     }
   }
 }
