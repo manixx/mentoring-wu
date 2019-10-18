@@ -7,5 +7,5 @@ svg {
 }
 
 .heavy-blurred {
-  filter: blur(40px);
+  filter: blur(50px);
 }
