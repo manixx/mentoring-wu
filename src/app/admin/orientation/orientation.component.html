@@ -5,7 +5,7 @@
       <mat-card-title>{{ question.key }}</mat-card-title>
 
       <mat-list>
-        <mat-list-item *ngFor="let answer of question.value | keyvalue">
+        <mat-list-item *ngFor="let answer of question.value | keyvalue | objectOrder">
           <div mat-line>
             {{ answer.key }}
           </div>
@@ -14,7 +14,7 @@
             {{ getSum(question, answer.value) | number:'1.2-2' }}%
             <mat-progress-bar
               mode="determinate"
-              [value]="getSum(question, answer.value)"
+              [value]="getSum(question, answer.value, getMax(question.value))"
               ></mat-progress-bar>
           </div>
         </mat-list-item>

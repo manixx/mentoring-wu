@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {orientationQuestionCollection, OrientationQuestion} from 'src/app/orientation/orientation-question';
 import {FormBuilder, Validators, FormGroup, FormArray, FormControl} from '@angular/forms';
-import firebase from 'firebase/app';
 import {OrientationAnswer, orientationAnswerCollection} from 'src/app/orientation/orientation-answer';
 import {map} from 'rxjs/operators';
 
@@ -51,14 +50,18 @@ export class OrientationComponent implements OnInit {
         })
       );
 
-  getSum(question: { value: {} }, votes: number): number {
+  getSum(question: { value: {} }, votes: number, basis: number): number {
     let sum = 0;
 
     Object.keys(question.value).forEach(key => {
       sum += question.value[key];
     });
 
-    return votes / sum * 100;
+    return votes / basis * 100;
+  }
+
+  getMax(answers: { [key:string]: number }) {
+    return Math.max(...Object.values(answers))
   }
 
   cleanup() {

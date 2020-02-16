@@ -45,6 +45,7 @@ import { FeedbackComponent as AdminFeedbackComponent } from './admin/feedback/fe
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { WordcloudComponent } from './admin/wordcloud/wordcloud.component';
 import { DoneComponent } from './done/done.component';
+import { ObjectOrderPipe } from './object-order.pipe';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { DoneComponent } from './done/done.component';
     AdminFeedbackComponent,
     WordcloudComponent,
     DoneComponent,
+    ObjectOrderPipe,
   ],
   imports: [
     BrowserModule,
